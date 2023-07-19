@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OPENAPI">
+	
+
+
+  <insert id="INSERT" parameterType="api"  > <!-- memberAlias -->
+     insert into company2(idx,rdnmadr,logitude,entrprsNm,rprsntvNm,latitude,mainGoods)
+     values(company_idx.nextval, #{rdnmadr}, #{logitude}, #{entrprsNm}, #{rprsntvNm}, #{latitude}, #{mainGoods})
+  </insert>
+  
+   <insert id="EVINSERT" parameterType="ev"  > <!-- memberAlias -->
+     insert into EvSearch(idx, csNm, addr, cpNm, cpStat)
+     values(company_idx.nextval, #{csNm}, #{addr}, #{cpNm}, #{cpStat})
+  </insert>
+  
+  <select id="SELECT"  resultType="api">
+ 	select * from company2 
+ 	where 1=1
+ 		<if test="ch1=='idx'">
+ 			and idx like '%'||#{ch2}||'%'
+ 		</if>
+ 		<if test="ch1=='rdnmadr'">
+ 			and rdnmadr like '%'||#{ch2}||'%'
+ 		</if>
+  </select>
+  
+  <select id="EVSELECT"  resultType="ev">
+  <![CDATA[
+ 	select * from EvSearch where addr like '%거창%'
+  ]]>
+  </select>
+  
+  <select id="EVSELECTONE"  resultType="ev">
+ 		select * from EvSearch where idx=#{idx} 
+  </select>
+  
+  <select id="SELECTONE"  resultType="api">
+ 	select * from company2 where idx=#{idx}	
+  </select>
+  
+  
+  
+</mapper>	

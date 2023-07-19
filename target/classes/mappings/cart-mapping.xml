@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CART">
+	
+  <insert id="INSERT" parameterType="cart"  > <!-- memberAlias -->
+     insert into cartTBL(cartId,custNo,productId,amount)
+     values( seq_cartTBL.nextval,#{custNo}, #{productId}, #{amount})
+  </insert>
+  
+  <insert id="ORDERJUMUNSEO" parameterType="orderjumunseo"  > <!-- memberAlias -->
+     insert into orderJumunseo(idx,cartId,custNo,productId,productName,amount, orderG)
+     values( seq_cartTBL.nextval,#{cartId},#{custNo}, #{productId}, #{productName}, #{amount}, #{orderG})
+  </insert>
+  
+  <insert id="ORDERMONEY" parameterType="ordermoney"  > <!-- memberAlias -->
+     insert into orderMoney(idx,custno,baesongbi, totalMoney)
+     values( seq_cartTBL.nextval,#{custno}, #{baesongbi}, #{totalMoney})
+  </insert>
+  
+  <update id="CARTUPDATE" parameterType="cart"  > <!-- memberAlias -->
+     update cartTBL set amount=#{amount} where cartId = #{cartId}
+  </update>
+  
+  <delete id="CARTDELETE" parameterType="cart"  > <!-- memberAlias -->
+     delete from cartTBL where cartId = #{cartId}
+  </delete>
+  
+  <delete id="CARTDELETEALL" parameterType="cart"  > <!-- memberAlias -->
+     delete from cartTBL where custNo = #{custNo}
+  </delete>
+  
+  <select id="SELECTCARTLIST" resultType="cart">
+  	 select p.productName, c.custNo,cartId, c.productId, c.amount, p.productImg as productImgStr, p.productPrice 
+  	 from 
+  	 cartTBL c join member_tbl_02 m on c.custNo=m.custno
+  	 join productTBL p on c.productId=p.productId
+  	 where c.custNo=#{custNo}
+  </select>
+  
+  <select id="ORDERG" resultType="int" parameterType="ordermoney">
+  	select max(idx) idx from orderMoney where custno=#{custno}
+  </select>
+  
+   <select id="SELECTMONEY" resultType="ordermoney" parameterType="ordermoney">
+  	select * from orderMoney order by idx desc
+   </select>
+   
+   <select id="ORDERONE" resultType="orderone">
+  	select orderG, m.baesongbi, m.totalMoney, j.idx, j.productName,j.AMOUNT, j.productId ,j.getDate
+	,custName, phone, m2.ADDRESS, pstcode, m2.DETAILADDRESS, m.custno
+	from orderMoney m join orderJumunseo j 
+	on m.idx=j.orderG join member_tbl_02 m2
+	on m2.custno = m.custno 
+	where j.orderG = #{orderG} order by j.idx desc
+   </select>
+  
+  
+  
+  
+  
+</mapper>	
